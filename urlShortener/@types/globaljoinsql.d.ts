@@ -15,16 +15,52 @@ declare global {
     fields?: string[];
   }
 
+  // count join arguments
+  interface countjoinargs {
+    table: string;
+    columns: string[];
+    values: any[];
+    jointable: string;
+    joincolumns: string[];
+    joinvalues: any[];
+    joinid1: string;
+    joinid2: string;
+    spantable?: string;
+    spancol?: string;
+    span?: number;
+  }
+
   // select arguments
   interface selectargs {
     table: string;
     columns: string[];
-    values: any[][];
+    values: any[];
     limit?: number;
     offset?: number;
     spancol?: string;
     span?: number;
     order?: string;
+    reverse?: boolean;
+    fields?: string[];
+  }
+
+  // join arguments
+  interface joinargs {
+    table: string;
+    columns: string[];
+    values: any[];
+    jointable: string;
+    joincolumns: string[];
+    joinvalues: any[];
+    joinid1: string;
+    joinid2: string;
+    limit?: number;
+    offset?: number;
+    spantable: string;
+    spancol?: string;
+    span?: number;
+    order?: string;
+    ordertable: string;
     reverse?: boolean;
     fields?: string[];
   }
