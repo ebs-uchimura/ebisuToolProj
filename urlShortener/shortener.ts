@@ -103,6 +103,7 @@ app.get("/:key", async (req: any, res: any) => {
     if (e instanceof Error) {
       logger.error(e.message);
     }
+    res.send("error");
   }
 });
 
@@ -166,6 +167,7 @@ app.post("/create", async (req: any, res: any) => {
     if (e instanceof Error) {
       logger.error(e.message);
     }
+    res.send("error");
   }
 });
 
