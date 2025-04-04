@@ -25,9 +25,9 @@ Public Class Db
             ' SQL接続文
             mysqldb = "Server=localhost" _
             & ";Port=3306" _
-            & ";Database=autoprintdb" _
-            & ";UserID=adminuser" _
-            & ";Password='Ebiebi+2362'"
+            & ";Database=*****" _
+            & ";UserID=*****" _
+            & ";Password='*****'"
 
             ' SQL設定
             mysqlCon.ConnectionString = mysqldb
