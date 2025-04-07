@@ -8,42 +8,101 @@ Public Module DataFunctions
     '*分  類：パブリック
     '--------------------------------------------------------
     Public Function MakeItemInitialTable(strFileNames As String()) As DataTable
+        ' 変数定義
+        Dim itemCnt As Integer ' 件数
+        Dim pageCnt As Integer ' ラベル枚数
+        Dim tmpStr As String ' 行読み込み用
+        Dim pbCheckName As String ' PB確認希望
+        Dim tmpFileNameWithoutExtension As String ' 拡張子抜きファイル名
         ' ジェネリック定義
         Dim itemColumnList As List(Of String) ' itemヘッダ
         Dim itemTypeList As List(Of String) ' item型
         Dim itemDbFlgList As List(Of String) ' itemdbフラグ
         Dim itemDataTableFlgList As List(Of String) ' itemdatatableフラグ
+        Dim zendoFlg As Boolean ' 前回同様フラグ
+        ' 配列定義
+        Dim tmpStrArray As String() ' 行格納用
         ' オブジェクト定義
         Dim emptyDt As New DataTable ' 空のDataTable
-        Dim emptyRow As DataRow ' 空のDataRow
         Dim dtView As DataView ' 重複削除用
         Dim resultItemDt As DataTable ' 取得itemDataTable
         Dim finalItemDt As DataTable ' 最終itemDataTable
+        ' オブジェクト定義
+        Dim tmpObjFile As IO.StreamReader ' txt読込用
 
         Try
-            ' DBインスタンス作成
-            Dim dbMaker = New Db()
-            ' 空の行
-            emptyRow = emptyDt.NewRow
-            ' itemDB取得
-            resultItemDt = dbMaker.Sql_select("Select * from itemtable where date = " + globalNowDate)
+            ' itemヘッダ
+            itemColumnList = GetFixedData("itemheader")
             ' item型
             itemTypeList = GetFixedData("itemtype")
             ' itemdatatableフラグ
             itemDbFlgList = GetFixedData("itemdbflg")
             ' itemdatatableフラグ
             itemDataTableFlgList = GetFixedData("itemdatatableflg")
-            ' itemヘッダ
-            itemColumnList = GetFixedData("itemheader")
+           
+            ' itemtableクエリ用データ作成
+            For i As Integer = 0 To strFileNames.Length - 1
+                ' 前同フラグ初期化
+                zendoFlg = False
+                ' ファイルの存在確認
+                If IO.File.Exists(strFileNames(i).ToString) Then
+                    ' 初期化
+                    itemCnt = 0
+                    pageCnt = 0
+                    ' txtファイル名
+                    tmpFileName = IO.Path.GetFileName(strFileNames(i).ToString)
+                    ' 拡張子抜きファイル名
+                    tmpFileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(tmpFileName)
+                    ' txt読込
+                    tmpObjFile = New IO.StreamReader(rootParentPath + tmpFileName, System.Text.Encoding.Default)
+                    ' 最初の行読込
+                    tmpStr = tmpObjFile.ReadLine()
+                    ' 最後の行まで読込
+                    While (tmpStr <> "")
+                        ' 件数
+                        itemCnt += 1
+                        ' 配列格納
+                        tmpStrArray = tmpStr.Split(CChar(","))
+                        ' ラベル枚数
+                        pageCnt += Integer.Parse(tmpStrArray(3))
+                        ' 次の行読込
+                        tmpStr = tmpObjFile.ReadLine()
+                    End While
 
-            ' itemdatatable
-            For i As Integer = 0 To itemDataTableFlgList.Count
-                ' DBなしDataTableあり
-                If itemDbFlgList(i) = "0" And itemDataTableFlgList(i) = "1" Then
-                    ' カラムを格納
-                    resultItemDt.Columns.Add(itemColumnList(i), System.Type.GetType("System." + itemTypeList(i)))
+                    ' 前同確認
+                    If tmpFileNameWithoutExtension.IndexOf("前同") > 0 Then
+                        ' 前同フラグオン
+                        zendoFlg = True
+                    Else
+                        ' 前同フラグオフ
+                        zendoFlg = False
+                    End If
+
+                    ' PB確認希望チェック
+                    If tmpFileNameWithoutExtension.IndexOf("確認") > 0 AndAlso globalPBCheck Then
+                        ' PB確認希望
+                        pbCheckName = "検証用"
+                    Else
+                        ' PB確認希望は空欄
+                        pbCheckName = ""
+                    End If
+
                     ' 値を格納
                     For Each itemRow As DataRow In resultItemDt.Rows
+                        ' itemID
+                        itemRow("itemID") =  CStr(i + 1)
+                        ' 日付
+                        itemRow("日付") = globalNowDate
+                        ' 指示書
+                        itemRow("指示書") = tmpFileNameWithoutExtension
+                        ' 件数
+                        itemRow("件数") = itemCnt
+                        ' 枚数
+                        itemRow("枚数") = pageCnt
+                        ' フォルダ
+                        itemRow("フォルダ") = globalRootPath + globalNowDate + "\" + tmpFileNameWithoutExtension
+                        ' 配置進捗
+                        itemRow("配置進捗") = "　"
                         ' 配置選択
                         itemRow("配置選択") = False
                         ' 検出OK
@@ -54,8 +113,20 @@ Public Module DataFunctions
                         itemRow("面付選択") = False
                         ' 指示書状態
                         itemRow("指示書状態") = ""
+                        ' 進捗
+                        itemRow("進捗") = "未処理"
                         ' 変更前
                         itemRow("変更前") = "0"
+                        ' 配置出力時間
+                        itemRow("配置出力時間") = ""
+                        ' PB確認希望
+                        itemRow("PB確認希望") = pbCheckName
+                        ' DL済
+                        itemRow("DL済") = ""
+                        ' 前同
+                        itemRow("前同") = zendoFlg
+                        ' 担当者
+                        itemRow("担当者") = globalUserName
                         ' 背景色
                         itemRow("背景色") = ""
                         ' 指示書重複
