@@ -1,7 +1,10 @@
 {
-  "name": "posterViewer",
+  "name": "poster-viewer",
+  "productName": "poster-viewer",
   "version": "0.1.0",
-  "private": true,
+  "description": "getting box absolute path from urls.",
+  "main": "app.js",
+  "keywords": [],
   "scripts": {
     "start": "node app.js"
   },
@@ -13,9 +16,5 @@
     "path": "^0.12.7"
   },
   "devDependencies": {},
-  "main": "app.js",
-  "keywords": [],
-  "author": "Koichi Uchimura",
-  "license": "ISC",
-  "description": ""
+  "license": "GPL-3.0"
 }
