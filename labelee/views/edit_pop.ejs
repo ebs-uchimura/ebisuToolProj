@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<!-- JQUERY UI -->
+<link rel="stylesheet" href="./stylesheets/jquery-ui.min.css" type="text/css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="/stylesheets/man_base.css" title="Main styles">
+<!-- script（JQUERY） -->
+<script type="text/javascript" src="./libs/jquery-3.2.1.min.js"></script>
+<!-- JQUERY UI -->
+<script type="text/javascript" src="./libs/jquery-ui.min.js"></script>
+<!-- calender -->
+<script type="text/javascript" src="./libs/jquery.ui.datepicker-ja.min.js"></script>
+<title><%= title %></title>
+</head>
+<body>
+<div>
+<h2><%= title %></h2>
+<% if(ctg == 1){ %>
+    <form autocomplete="off" action="/edit_data1" method="post">
+        <input type="hidden" name="id" value="<%= idx %>" />
+        <input type="hidden" name="price" value="<%= data.price %>" />
+        <input type="hidden" name="gross" value="<%= data.total %>" />
+        <input type="hidden" name="rand" value="<%= data.rand_id %>" />
+        <input type="hidden" name="old_itemcount" value="<%= data.itemcount %>" />
+        <table class="edit_tbl">
+            <tr>
+                <td class="tbl_header" width="100px">edit item</td>
+                <td class="tbl_header" width="200px">content</td>
+                <td class="tbl_header" width="200px">edit</td>
+                <td class="tbl_header" width="300px">remarks</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">ID</td>
+                <td><%= data.id %></td>
+                <td><%= data.id %></td>
+                <td>fixedID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">orderID</td>
+                <td><%= data.order_id %></td>
+                <td><%= data.order_id %></td>
+                <td>10 characters orderID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">order time</td>
+                <td><%= time %></td>
+                <td><%= time %></td>
+                <td>order time(yyyy-MM-dd hh:mm:ss)</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">item name</td>
+                <td><%= data.itemname %></td>
+                <td><%= data.itemname %></td>
+                <td>name of product</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">price</td>
+                <td><%= data.price.toLocaleString() %></td>
+                <td><%= data.price.toLocaleString() %></td>
+                <td>price of product</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">amount</td>
+                <td><%= data.itemcount %></td>
+                <td><input type="number" min="1" name="itemcount" value="<%= data.itemcount %>" /></td>
+                <td>amount of product</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">price（yen）</td>
+                <td><%= (data.price * data.itemcount).toLocaleString() %></td>
+                <td><%= (data.price * data.itemcount).toLocaleString() %></td>
+                <td>price of single item</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">gross（yen）</td>
+                <td><%= data.total.toLocaleString() %></td>
+                <td><%= data.total.toLocaleString() %></td>
+                <td>total purchased price</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">deadline</td>
+                <td><%= data.date %></td>
+                <td><input type="text" value="<%= data.date %>" name="date" id="datepicker" /></td>
+                <td>delivery deadline</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">label ID</td>
+                <td><%= data.labelid %></td>
+                <td><%= data.labelid %></td>
+                <td>ID of label</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">customer name</td>
+                <td><%= data.username %></td>
+                <td><%= data.username %></td>
+                <td>name of customer</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">agentID</td>
+                <td>1</td>
+                <td><%= data.agentid %></td>
+                <td>agent company's ID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">staffID</td>
+                <td><%= data.ownerid %></td>
+                <td><input type="number" min="1" name="ownerid" value="<%= data.ownerid %>" id="owner" /></td>
+                <td>staffID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">payment status</td>
+                <td><% if(data.paid == 1 || !data.paid){ %>paid<% } else　{ %>unpaid<% } %></td>
+                <td>
+                    <select name="paid" value="<%= data.paid %>" id="paid">
+                    <option value="0">unpaid</option>
+                    <option value="1">paid</option>
+                    <option value="2">paying</option>
+                    <option value="3">under survey</option>
+                    </select>
+                </td>
+                <td>payment status</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">progress</td>
+                <td><% if(data.progress == 1 || !data.progress){ %>not started<% } else if(data.progress == 2){ %>editing<% } else if(data.progress ==3 ){ %>edited<% } else if(data.progress == 4){ %>printing<% } else if(data.progress == 5){ %>printed<% } else if(data.progress == 6){ %>handling<% } else if(data.progress == 7 ){ %>shipped<% } else if(data.progress == 8){ %>break<% } else { %>cancel<% } %></td>
+                <td>
+                    <select name="progress" value="<%= data.progress %>" id="prg">
+                    <option value="1">not started</option>
+                    <option value="2">editing</option>
+                    <option value="3">edited</option>
+                    <option value="4">printing</option>
+                    <option value="5">printed</option>
+                    <option value="6">handling</option>
+                    <option value="7">shipped</option>
+                    <option value="8">break</option>
+                    <option value="9">cancel</option>
+                    </select>
+                </td>
+                <td>progress</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">created time</td>
+                <td><%= crtime %></td>
+                <td><%= crtime %></td>
+                <td>created time</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">updated time</td>
+                <td><%= uptime %></td>
+                <td><%= uptime %></td>
+                <td>updated time</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center;"><input type="submit" value="update" onclick="setTimeout(function () {window.opener.location.reload(),window.close()}, 300);"></td>
+            </tr>
+        </table>
+    </form>
+<% } else if(ctg == 2) { %>
+    <form autocomplete="off" action="/edit_data2" method="post">
+        <input type="hidden" name="id" value="<%= idx %>" />
+        <table class="edit_tbl">
+            <tr>
+                <td width="20%">edit item</td>
+                <td width="30%">content</td>
+                <td width="30%">edit</td>
+                <td width="20%">remark</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">userID</td>
+                <td><%= data.id %></td>
+                <td><%= data.id %></td>
+                <td>fixed userID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">name</td>
+                <td><%= data.name %></td>
+                <td><input type="text" name="name" value="<%= data.name %>" /></td>
+                <td>customer name</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">ruby</td>
+                <td><%= data.ruby %></td>
+                <td><input type="text" name="ruby" value="<%= data.ruby %>" /></td>
+                <td>ruby of customer's name</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">organizaiton</td>
+                <td><%= data.group %></td>
+                <td><input type="text" name="group" value="<%= data.group %>" /></td>
+                <td>name of organization who purchased</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">〒</td>
+                <td><%= data.zip %></td>
+                <td><input type="text" name="zip" value="<%= data.zip %>" /></td>
+                <td>zip address</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">address</td>
+                <td><%= data.address %></td>
+                <td><input type="text" name="addr" value="<%= data.address %>" /></td>
+                <td>address of purchaser</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">telephone</td>
+                <td><%= data.tel %></td>
+                <td><input type="text" name="tel" value="<%= data.tel %>" /></td>
+                <td>customer's telephone number</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">mail address</td>
+                <td><%= data.mail %></td>
+                <td><input type="text" name="mail" value="<%= data.mail %>" /></td>
+                <td>customer's mail address</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">agentID</td>
+                <td><%= data.agentid %></td>
+                <td><input type="text" name="agentid" value="<%= data.agentid %>" /></td>
+                <td>agentID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">staffID</td>
+                <td><%= data.ownerid %></td>
+                <td><input type="text" name="ownerid" value="<%= data.ownerid %>" /></td>
+                <td>staffID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">created time</td>
+                <td><%= crtime %></td>
+                <td><%= crtime %></td>
+                <td>created time</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">updated time</td>
+                <td><%= uptime %></td>
+                <td><%= uptime %></td>
+                <td>updated time</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center;"><input type="submit" value="update" onclick="setTimeout(function () {window.opener.location.reload(),window.close()}, 300);"></td>
+            </tr>
+        </table>
+    </form>
+<% } else if(ctg == 3) { %>
+    <form autocomplete="off" action="/edit_data3" method="post">
+        <input type="hidden" name="id" value="<%= idx %>" />
+        <table class="edit_tbl">
+            <tr>
+                <td width="20%">edit item</td>
+                <td width="30%">content</td>
+                <td width="30%">edit</td>
+                <td width="20%">remark</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">productID</td>
+                <td><%= data.id %></td>
+                <td><%= data.id %></td>
+                <td>fixed productID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">sort</td>
+                <td><%= data.ganre %></td>
+                <td><input type="text" name="ganre" value="<%= data.ganre %>" /></td>
+                <td>sort of product</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">product name</td>
+                <td><%= data.name %></td>
+                <td><%= data.name %></td>
+                <td>name of product</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">price</td>
+                <td><%= data.price.toLocaleString() %></td>
+                <td><input type="text" name="price" value="<%= data.price %>" /></td>
+                <td>price of product</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">madein</td>
+                <td><%= data.madein %></td>
+                <td><%= data.madein %></td>
+                <td>place of origin</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">volume</td>
+                <td><%= data.volume.toLocaleString() %></td>
+                <td><%= data.volume.toLocaleString() %></td>
+                <td>volume of product</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">degree</td>
+                <td><%= data.alchohol %></td>
+                <td><%= data.alchohol %></td>
+                <td>alchohol degree</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">feature</td>
+                <td><%= data.specific %></td>
+                <td><input type="text" name="specific" value="<%= data.specific %>" /></td>
+                <td>feature of product</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">created time</td>
+                <td><%= crtime %></td>
+                <td><%= crtime %></td>
+                <td>created time</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">updated time</td>
+                <td><%= uptime %></td>
+                <td><%= uptime %></td>
+                <td>updated time</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center;"><input type="submit" value="update" onclick="setTimeout(function () {window.opener.location.reload(),window.close()}, 300);"></td>
+            </tr>
+        </table>
+    </form>
+<% } else if(ctg == 4) { %>
+    <form autocomplete="off" action="/edit_data4" method="post">
+        <input type="hidden" name="id" value="<%= idx %>" />
+        <table class="edit_tbl">
+            <tr>
+                <td width="20%">edit item</td>
+                <td width="30%">content</td>
+                <td width="30%">edit</td>
+                <td width="20%">remark</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">AgentID</td>
+                <td><%= data.id %></td>
+                <td><%= data.id %></td>
+                <td>agentID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">sort</td>
+                <td><%= data.ganre %></td>
+                <td><input type="text" name="ganre" value="<%= data.ganre %>" /></td>
+                <td>sort of agent</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">agent company name</td>
+                <td><%= data.name %></td>
+                <td><input type="text" name="name" value="<%= data.name %>" /></td>
+                <td>name of agent company</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">zip</td>
+                <td><%= data.zip %></td>
+                <td><input type="text" name="zip" value="<%= data.zip %>" /></td>
+                <td>zip number of agent company</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">address</td>
+                <td><%= data.addr %></td>
+                <td><input type="text" name="addr" value="<%= data.addr %>" /></td>
+                <td>zip number of agent company</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">tel</td>
+                <td><%= data.tel %></td>
+                <td><input type="number" name="tel" value="<%= data.tel %>" /></td>
+                <td>telephone number of agent company</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">mail address</td>
+                <td><%= data.mail %></td>
+                <td><input type="text" name="mail" value="<%= data.mail %>" /></td>
+                <td>mail address of agent company</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">staff</td>
+                <td><%= data.ownerid %></td>
+                <td><input type="number" name="ownerid" value="<%= data.ownerid %>" /></td>
+                <td>staffID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">created time</td>
+                <td><%= crtime %></td>
+                <td><%= crtime %></td>
+                <td>created time</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">updated time</td>
+                <td><%= uptime %></td>
+                <td><%= uptime %></td>
+                <td>updated time</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center;"><input type="submit" value="update" onclick="setTimeout(function () {window.opener.location.reload(),window.close()}, 300);"></tde>
+            </tr>
+        </table>
+    </form>
+<% } else if(ctg == 5){ %>
+    <form autocomplete="off" action="/edit_data5" method="post">
+        <input type="hidden" name="id" value="<%= idx %>" />
+        <table class="edit_tbl">
+            <tr>
+                <td width="20%">edit time</td>
+                <td width="30%">content</td>
+                <td width="30%">edit</td>
+                <td width="20%">remark</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">labelID</td>
+                <td><%= data.id %></td>
+                <td><%= data.id %></td>
+                <td>fixed labelID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">sort</td>
+                <td><%= data.ganre %></td>
+                <td><input type="text" name="ganre" value="<%= data.ganre %>" /></td>
+                <td>sort of label</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">image</td>
+                <td><img src="<%= data.url %>" /></td>
+                <td><input type="text" name="url" value="" /></td>
+                <td>label image</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">name</td>
+                <td><%= data.name %></td>
+                <td><input type="text" name="name" value="<%= data.name %>" /></td>
+                <td>label name</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">comment</td>
+                <td><%= data.comment %></td>
+                <td><input type="text" name="comment" value="<%= data.comment %>" /></td>
+                <td>comment</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">created time</td>
+                <td><%= crtime %></td>
+                <td><%= crtime %></td>
+                <td>created time</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">updated time</td>
+                <td><%= uptime %></td>
+                <td><%= uptime %></td>
+                <td>updated time</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center;"><input type="submit" value="update" onclick="setTimeout(function () {window.opener.location.reload(),window.close()}, 300);"></td>
+            </tr>
+        </table>
+    </form>
+<% } else { %>
+    <form autocomplete="off" action="/edit_data6" method="post">
+        <input type="hidden" name="id" value="<%= idx %>" />
+        <table class="edit_tbl">
+            <tr>
+                <td width="20%">edit item</td>
+                <td width="30%">content</td>
+                <td width="30%">edit</td>
+                <td width="20%">remark</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">staffID</td>
+                <td><%= data.id %></td>
+                <td><%= data.id %></td>
+                <td>staffID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">employeeID</td>
+                <td><%= data.employeeid %></td>
+                <td><input type="text" name="employeeid" value="<%= data.employeeid %>" /></td>
+                <td>employeeID</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">name</td>
+                <td><%= data.name %></td>
+                <td><input type="text" name="name" value="<%= data.name %>" /></td>
+                <td>staff name</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">belongs</td>
+                <td><%= data.incharge %></td>
+                <td><input type="text" name="belonging" value="<%= data.belonging %>" /></td>
+                <td>belongs</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">permission</td>
+                <td><%= data.permission %></td>
+                <td><input type="text" name="permission" value="<%= data.permission %>" /></td>
+                <td>permission</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">created time</td>
+                <td><%= crtime %></td>
+                <td><%= crtime %></td>
+                <td>created time</td>
+            </tr>
+            <tr>
+                <td class="tbl_left">updated time</td>
+                <td><%= uptime %></td>
+                <td><%= uptime %></td>
+                <td>updated time</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center;"><input type="submit" value="update" onclick="setTimeout(function () {window.opener.location.reload(),window.close()}, 300);"></td>
+            </tr>
+        </table>
+    </form>
+<% } %>
+</div>
+<script>
+$(function() {
+  $("#paid").val("<%= data.paid %>");
+  $("#prg").val("<%= data.progress %>");
+  // select option
+  console.log("405: Jquery started")
+  // calender
+  $.datepicker.setDefaults( $.datepicker.regional[ "ja" ] );
+  $("#datepicker").datepicker();
+  console.log("420: calender started")
+});
+  // get now time
+function getTime(){
+  // now
+  var now = new Date();
+  var year = now.getFullYear();
+  var mon = now.getMonth() + 1;
+  var day = now.getDate() + 10;
+  var date = year + "/" + mon + "/" + day;
+  var jikan = date.toLocaleString();
+  return jikan;
+}
+</script>
+</body>
+</html>

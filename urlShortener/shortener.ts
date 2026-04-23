@@ -4,7 +4,7 @@
 */
 
 // import global interface
-import {} from "./@types/globalsql";
+import { } from "./@types/globalsql";
 // モジュール読み込み
 import { config as dotenv } from "dotenv"; // dotenv
 import * as path from "path"; // path
@@ -12,10 +12,10 @@ import express from "express"; // express
 import helmet from "helmet"; // セキュリティ対策
 import crypto from "crypto"; // セキュリティ対策
 import SQL from "./class/MySql0517"; // DB操作用
-import Logger from "./class/Logger0516"; // ロガー
+import Logger from "./class/Logger"; // ロガー
 
 // ロガー
-const logger: any = new Logger(__dirname, "");
+const logger: any = new Logger("Ebisudo", "shortener", undefined, "debug");
 // 開発フラグ
 const DEV_FLG: boolean = false;
 
@@ -103,7 +103,6 @@ app.get("/:key", async (req: any, res: any) => {
     if (e instanceof Error) {
       logger.error(e.message);
     }
-    res.send("error");
   }
 });
 
@@ -167,7 +166,6 @@ app.post("/create", async (req: any, res: any) => {
     if (e instanceof Error) {
       logger.error(e.message);
     }
-    res.send("error");
   }
 });
 

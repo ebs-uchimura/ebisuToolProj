@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>***</title>
+  <!-- favicon -->
+  <link rel="shortcut icon" href="images/favicon.ico" />
+  <!-- WEB clip -->
+  <link rel="apple-touch-icon-precomposed" href="images/WEB_EBISU.png" />
+  <!-- css（ONSENUI） -->
+  <link rel="stylesheet" href="./stylesheets/onsenui.css" type="text/css">
+  <link rel="stylesheet" href="./stylesheets/onsen-css-components.min.css" type="text/css">
+  <!-- css（FONTAWESOME） -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <!-- custom CSS -->
+  <link rel="stylesheet" href="./stylesheets/base.css" type="text/css">
+  <link rel="stylesheet" href="./stylesheets/initialize.css" type="text/css">
+  <!-- JQUERY UI -->
+  <link rel="stylesheet" href="./stylesheets/jquery-ui.min.css" type="text/css">
+  <link rel="stylesheet" href="./stylesheets/jquery-ui.theme.min.css" type="text/css">
+  <link rel="stylesheet" href="./stylesheets/jquery-ui.structure.min.css" type="text/css"> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+  <!-- GOOGLE FONTS -->
+  <link href="https://fonts.googleapis.com/css?family=M+PLUS+1p:900|Noto+Sans+JP:900|Noto+Serif+JP:900|M+PLUS+Rounded+1c:900|Kosugi+Maru" rel="stylesheet">
+  <!-- script（JQUERY） -->
+  <script type="text/javascript" src="./libs/jquery-3.2.1.min.js"></script>
+  <!-- script（ONSEN&VUE） -->
+  <script type="text/javascript" src="./libs/vue.min.js"></script>
+  <script type="text/javascript" src="./libs/onsenui.min.js"></script>
+  <script type="text/javascript" src="./libs/vue-onsenui.js"></script>
+  <!-- JQUERY UI -->
+  <!-- router -->
+  <script type="text/javascript" src="./libs/vue-router.min.js"></script>
+  <script type="text/javascript" src="./libs/jquery-ui.min.js"></script>
+  <!-- AXIOS -->
+  <script type="text/javascript" src="./libs/axios.min.js"></script>
+  <!-- HTML2CANVAS　-->
+  <script type="text/javascript" src="./libs/html2canvas.min.js"></script>
+  <!-- user agent -->
+  <script type="text/javascript" src="./libs/userAgentChecker.min.js"></script>
+  <!-- calender -->
+  <script type="text/javascript" src="./libs/jquery.ui.datepicker-ja.min.js"></script>
+  <!-- MD5 -->
+  <script type="text/javascript" src="./libs/md5.min.js"></script>
+  <!-- ajaxzip3 -->
+  <script type="text/javascript" src="./libs/ajaxzip3.js"></script>
+</head>
+<body>
+<!-- ★ wrapper -->
+<template id="main">
+  <v-ons-page>
+    <v-ons-toolbar v-if="show" class="toolbar" v-on:click.prevent="edit_cart()">
+      <v-ons-header class="center l_blue4">
+        <i class="fas fa-ribbon fa-2x"></i>
+        <span v-show="cart_on" style="font-size: 1.2rem;">&emsp;<strong>LABELEE</strong>
+          <span v-show="number !== 0" class="fa-stack fa-xs" style="color:#dd143c;">
+          <i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-inverse fa-stack-1x">{{ number }}</i></span>
+          </span>
+        </span>
+      </v-ons-header>
+    </v-ons-toolbar>
+    <div id="p2rfix">
+      <!-- bottom tabbar -->
+      <v-ons-tabbar position="bottom"
+        :tabs="tabs"
+        :visible="show_tab"
+        :index.sync="activeIndex"
+        @change-form="change_form"
+        @select-method="select_method"
+        @tokusho="tokusho"
+        @sort-label="sort_label"
+        @edit_cart="edit_cart"
+        @make-labels="make_labels"
+        @insert-db="insert_db"
+        @insert-tmpdb="insert_tmpdb"
+        @select-page="select"
+        @send-brother="send_brother"
+        @img_post="img_post"
+        @prechange="getTab($event)"
+        @enable-badge="enableit"
+        @disable-badge="disableall"
+        @sync-index="syncindex"
+        @font-input="getfont"
+        @font-input2="getfont2"
+        @font-input3="getfont3"
+        @font-size="sizechange"
+        @font-size2="sizechange2"
+        @font-size3="sizechange3"
+        @vertical="vert"
+        @vertical2="vert2"
+        @vertical3="vert3"
+        @ch_color="ch_color"
+        @select-image="selimage"
+        @update="update"
+        @clear="clear"
+        @con_post="con_post"
+        @add-cart="addcart"
+        @go_to_payment="gopay"
+        @delete-item="delete_item"
+        @submit-payment="subpay">
+      </v-ons-tabbar>
+    </div>
+  </v-ons-page>
+</template>
+
+<!-- ★ alchohol -->
+<template id="alchohol">
+  <v-ons-page>
+    <v-ons-list>
+      <div class="l_blue3">&emsp;select alchohol</div>
+      <v-ons-list-item modifier="longdivider" tappable v-on:click.prevent="push(1)">
+        <div class="left">
+          <img class="list-item__thumbnail2" src="images/pd1_label.png" />
+        </div>
+        <div class="center">
+          <span class="list-item__title"><strong>shochu</strong></span>
+        </div>
+      </v-ons-list-item>
+      <v-ons-list-item modifier="longdivider" tappable v-on:click.prevent="push(2)">
+        <div class="left">
+          <img class="list-item__thumbnail2" src="images/pd3_label.png" />
+        </div>
+        <div class="center">
+          <span class="list-item__title"><strong>wine</strong></span>
+        </div>
+      </v-ons-list-item>
+      <v-ons-list-item modifier="longdivider"  tappable v-on:click.prevent="push(3)">
+        <div class="left">
+          <img class="list-item__thumbnail2" src="images/pd5_label.png" />
+        </div>
+        <div class="center">
+          <span class="list-item__title"><strong>one-quarter bat shochu</strong></span>
+        </div>
+      </v-ons-list-item>
+      <v-ons-list-item modifier="longdivider">
+        	<ul class="main_text">
+        		<li>Advisories aimed at preventing minors from drinking, such as "wait until you are 20 to drink" and "drinking by minors is illegal," are also part of required indications.</li>
+          	<li>Payment method is creditcard only.</li>
+          	<li>"Authentic shochu" is on label.</li>
+            <li>supported by&ensp;<i class="fab fa-node-js fa-xs"></i>&ensp;/&ensp;<i class="fab fa-npm"></i>&ensp;/&ensp;<img width="20vw" src="images/NginxLogo.gif" />&ensp;/&ensp;<i class="fab fa-vuejs fa-xs"></i>&ensp;/&ensp;<img width="10vw" src="images/onsen.png" />&ensp;/&ensp;<i class="fab fa-font-awesome"></i>&ensp;/&ensp;<i class="fab fa-linux"></i></li>
+            <li><v-ons-button modifier="large" v-on:click.prevent="tokusho(true)">Notation based on the Specified Commercial Transactions Law</v-ons-button></li>
+          </ul>
+      </v-ons-list-item>
+    </v-ons-list>
+  </v-ons-page>
+</template>
+
+<!-- ★ product -->
+<template id="product">
+  <v-ons-page>
+    <div v-show="page==1">
+    	<v-ons-list>
+        <div class="l_blue3">&emsp;Authentic shochu imo</div>
+        <v-ons-list-item modifier="longdivider" tappable v-on:click.prevent="push(1)">
+          <div class="left">
+            <img class="list-item__thumbnail2" :src="prd_db.path[0]">
+          </div>
+          <div class="center">
+            <span class="list-item__title"><strong>{{ prd_db.name[0] }}</strong></span><span class="list-item__subtitle">{{ prd_db.comment[0] }}</span>
+          </div>
+        </v-ons-list-item>
+        <v-ons-list-item modifier="longdivider" tappable v-on:click.prevent="push(2)">
+          <div class="left">
+            <img class="list-item__thumbnail2" :src="prd_db.path[1]">
+          </div>
+          <div class="center">
+            <span class="list-item__title"><strong>{{ prd_db.name[1] }}</strong></span><span class="list-item__subtitle">{{ prd_db.comment[1] }}</span>
+          </div>
+        </v-ons-list-item>
+      </v-ons-list>
+    </div>
+    <div v-show="page==2">
+      <v-ons-list>
+        <div class="l_blue3">&emsp;wine</div>
+        <v-ons-list-item modifier="longdivider" tappable v-on:click.prevent="push(3)">
+          <div class="left">
+            <img class="list-item__thumbnail2" :src="prd_db.path[2]" />
+          </div>
+          <div class="center">
+            <span class="list-item__title"><strong>{{ prd_db.name[2] }}</strong></span><span class="list-item__subtitle">{{ prd_db.comment[2] }}</span>
+          </div>
+        </v-ons-list-item>
+        <v-ons-list-item modifier="longdivider" tappable v-on:click.prevent="push(4)">
+          <div class="left">
+            <img class="list-item__thumbnail2" :src="prd_db.path[3]" />
+          </div>
+          <div class="center">
+            <span class="list-item__title"><strong>{{ prd_db.name[3] }}</strong></span><span class="list-item__subtitle">{{ prd_db.comment[3] }}</span>
+          </div>
+        </v-ons-list-item>
+     　</v-ons-list>
+    </div>
+    <div v-show="page==3">
+      <v-ons-list>
+        <div class="l_blue3"><strong>&emsp;one-quarter bat shochu</strong></div>
+        <v-ons-list-item modifier="longdivider" tappable v-on:click.prevent="push(5)">
+          <div class="left">
+            <img class="list-item__thumbnail2" :src="prd_db.path[4]" />
+          </div>
+          <div class="center">
+            <span class="list-item__title"><strong>{{ prd_db.name[4] }}</strong></span><span class="list-item__subtitle">{{ prd_db.comment[4] }}</span>
+          </div>
+        </v-ons-list-item>
+      </v-ons-list>
+    </div>
+  </v-ons-page>
+</template>
+
+<!-- ★ detail -->
+<template id="detail">
+  <v-ons-page>
+  	<div v-show="page == 1">
+      <v-ons-card>
+        <ul class="pd_row">
+          <li><img class="pd_img" width="100vw" :src="prd_db.big_path[0]" /></li>
+          <li>
+            <ul class="pd_layout">
+              <li><p id="header">{{ prd_db.name[0] }}</p></li>
+              <li>volume: {{ prd_db.volume[0] }}ml</li>
+          	　<li>degree: {{ prd_db.alchohol[0] }}%</li>
+          	  <li>place of origin: {{ prd_db.madein[0] }}</li><br />
+              <li><p　id="price">{{ prd_db.price[0] }}yen<span style="font-size: 15px;">（tax included）</span></p></li>
+              <li id="pd_q">
+                <input class="spinner" value="1" name="value">
+              </li>
+              <li>
+                <v-ons-button modifier="large" class="pick" v-on:click.prevent="push()"><i class="fas fa-shopping-cart" fa-4x></i>Add to cart</v-ons-button>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+        <span style="font-weight: bold; font-size: 20px;">{{ prd_db.name[1] }}</span><br />
+        <p style="font-size: 14px;">{{ prd_db.long_comm[0] }}</p>
+      </v-ons-card>
+    </div>
+    <div v-show="page == 2">
+      <v-ons-card>
+        <ul class="pd_row">
+          <li><img class="pd_img" width="100vw" :src="prd_db.big_path[1]" /></li>
+          <li>
+            <ul class="pd_layout">
+              <li><p id="header">{{ prd_db.name[1] }}</p></li>
+              <li>volume: {{ prd_db.volume[1] }}ml</li>
+            　<li>degree: {{ prd_db.alchohol[1] }}%</li>
+              <li>place of origin: {{ prd_db.madein[1] }}</li><br />
+              <li><p　id="price">{{ prd_db.price[1] }}yen<span style="font-size: 15px;">（tax included）</span></p></li>
+              <li id="pd_q">
+                <input class="spinner" value="1" name="value" readonly="readonly">
+              </li>
+              <li>
+                <v-ons-button modifier="large" class="pick" v-on:click.prevent="push()"><i class="fas fa-shopping-cart" fa-4x></i>Add to cart</v-ons-button>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+        <span style="font-weight: bold; font-size: 20px;">suijin no kokoro murasaki-imo</span><br />
+        <p style="font-size: 14px;">{{ prd_db.long_comm[1] }}</p>
+      </v-ons-card>
+    </div>
+    <div v-show="page == 3">
+      <v-ons-card>
+        <ul class="pd_row">
+          <li><img class="pd_img" width="100vw" :src="prd_db.big_path[2]" /></li>
+          <li>
+            <ul class="pd_layout">
+              <li><p id="header2">{{ prd_db.name[2] }}</p></li>
+              <li>volume: {{ prd_db.volume[2] }}ml</li>
+            　<li>degree: {{ prd_db.alchohol[2] }}%</li>
+              <li>place of origin: {{ prd_db.madein[2] }}</li><br />
+              <li><p　id="price">{{ prd_db.price[2] }}yen<span style="font-size: 15px;">（tax included）</span></p></li>
+              <li id="pd_q">
+                <input class="spinner" value="1" name="value" readonly="readonly">
+              </li>
+              <li>
+                <v-ons-button modifier="large" class="pick" v-on:click.prevent="push()"><i class="fas fa-shopping-cart" fa-4x></i>Add to cart</v-ons-button>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+        <span style="font-weight: bold; font-size: 20px;">cabernet sauvignon</span><br />
+        <p style="font-size: 14px;">{{ prd_db.long_comm[2] }}</p>
+      </v-ons-card>
+    </div>
+    <div v-show="page == 4">
+      <v-ons-card>
+        <ul class="pd_row">
+          <li><img class="pd_img" width="100vw" :src="prd_db.big_path[3]" /></li>
+          <li>
+            <ul class="pd_layout">
+              <li><p id="header2">{{ prd_db.name[3] }}</p></li>
+              <li>volume: {{ prd_db.volume[3] }}ml</li>
+            　<li>degree: {{ prd_db.alchohol[3] }}%</li>
+              <li>place of origin: {{ prd_db.madein[3] }}</li><br />
+              <li><p　id="price">{{ prd_db.price[3] }}yen<span style="font-size: 15px;">（tax included）</span></p></li>
+              <li id="pd_q">
+                <input class="spinner" value="1" name="value" readonly="readonly">
+              </li>
+              <li>
+                <v-ons-button modifier="large" class="pick" v-on:click.prevent="push()"><i class="fas fa-shopping-cart" fa-4x></i>Add to cart</v-ons-button>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+        <span style="font-weight: bold; font-size: 20px;">Blanc Chardonna</span><br />
+        <p style="font-size: 14px;">{{ prd_db.long_comm[3] }}</p>
+      </v-ons-card>
+    </div>
+    <div v-show="page == 5">
+      <v-ons-card>
+        <ul class="pd_row">
+          <li><img class="pd_img" width="100vw" :src="prd_db.big_path[4]" /></li>
+          <li>
+            <ul class="pd_layout">
+              <li><p id="header2">{{ prd_db.name[4] }}</p></li>
+              <li>volume: {{ prd_db.volume[4] }}ml</li>
+            　<li>degree: {{ prd_db.alchohol[4] }}%</li>
+              <li>place of origin: {{ prd_db.madein[4] }}</li><br />
+              <li><p　id="price">{{ prd_db.price[4] }}yen<span style="font-size: 14px;">（tax included）</span></p></li>
+              <li id="pd_q">
+                <input class="spinner" value="1" name="value" readonly="readonly">
+              </li>
+              <li>
+                <v-ons-button modifier="large" class="pick" v-on:click.prevent="push()"><i class="fas fa-shopping-cart" fa-4x></i>Add to cart</v-ons-button>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+        <span style="font-weight: bold: font-size: 20px;">imodaikan</span><br />
+        <p style="font-size: 14px;">{{ prd_db.long_comm[4] }}</p>
+      </v-ons-card>
+  	</div>
+  </v-ons-page>
+</template>
+
+<template id="prepare">
+  <v-ons-page>
+    <v-ons-list>
+      <form id="regist_form" @submit.prevent="push">
+        <div class="l_blue5">&ensp;Production method</div>
+        <v-ons-list-item tappable v-on:click.prevent="select(1)">
+        <div class="left">
+          <v-ons-fab modifier="mini" :disabled="selectedBool1" style="margin-right: 3vw;">
+            <v-ons-icon style="color: #B0E0E6;" icon="md-check_circle"><i class="fas fa-check-circle"></i></v-ons-icon>
+          </v-ons-fab>
+          <i style="color: #000080;" class="fas fa-chalkboard-teacher fa-2x"></i>
+        </div>
+        <div class="center">
+          <span class="list-item__title">&ensp;designer</span><span class="list-item__subtitle">&nbsp;Leave it to the designer</span>
+        </div>
+      </v-ons-list-item>
+      <v-ons-list-item tappable v-on:click.prevent="select(2)">
+        <div class="left">
+          <v-ons-fab modifier="mini" :disabled="selectedBool2" style="margin-right: 3vw;">
+            <v-ons-icon style="color: #B0E0E6;" icon="md-check_circle"><i class="fas fa-check-circle"></i></v-ons-icon>
+          </v-ons-fab>
+          <i style="color: #000080; padding-left: 2vw" class="fas fa-palette fa-2x"></i>
+        </div>
+        <div class="center">
+          <span class="list-item__title">&emsp;yourself</span><span class="list-item__subtitle">&emsp;make it on your own</span>
+        </div>
+      </v-ons-list-item>
+        <div class="l_blue5">&ensp;label character</div>
+        <div class="text-header">&emsp;main character ※necessary</div>
+        <v-ons-list-item>
+          <div class="center">
+            <v-ons-input placeholder="anniversay ..etc" float required v-model="newEvent.title">
+            </v-ons-input>
+          </div>
+        </v-ons-list-item>
+        <div class="text-header">&emsp;label character</div>
+        <v-ons-list-item>
+          <div class="center">
+            <v-ons-input placeholder="thank you ..etc" float v-model="newEvent.sub_title"></v-ons-input>
+          </div>
+        </v-ons-list-item>
+        <div class="text-header">&emsp;label character</div>
+        <v-ons-list-item>
+          <div class="center">
+            <v-ons-input placeholder="your name ..etc" float v-model="newEvent.other_title"></v-ons-input>
+          </div>
+        </v-ons-list-item>
+      </form>
+    </v-ons-list>
+    <v-ons-button modifier="large" v-on:click.prevent="push()">next</v-ons-button>
+  </v-ons-page>
+</template>
+
+<!-- ★ label -->
+<template id="label">
+  <v-ons-page>
+    <v-ons-list>
+      <div class="l_blue3">&emsp;select label</div>
+      <v-ons-list-item>
+        <v-ons-button style="margin: 6px 6px"　v-on:click.prevent="lb_sort(1)">gifts</v-ons-button>
+        <v-ons-button style="margin: 6px 6px" v-on:click.prevent="lb_sort(2)">new year</v-ons-button>
+        <v-ons-button style="margin: 6px 6px" v-on:click.prevent="lb_sort(3)">event</v-ons-button>
+      </v-ons-list-item>
+      <v-ons-list-item tappable v-for="(label, index) in labels" v-on:click.prevent="push(index)">
+        <div class="left">
+          <img class="list-item__thumbnail2" v-bind:src="label.url">
+        </div>
+        <div class="center">
+          <span class="list-item__title">{{ label.title }}</span><span class="list-item__subtitle">{{ label.explanation }}</span>
+        </div>
+      </v-ons-list-item>
+    </v-ons-list>
+  </v-ons-page>
+</template>
+
+<!-- ★ edit -->
+<template id="sending">
+ 　<v-ons-page>
+  <!-- ■ canvas -->
+  <div id="my-node">
+    <div id="labelee_canvas" v-bind:style="form.styleg">
+      <div id="div1" class="drag-and-drop" v-bind:style="form.style">
+        <span id="text_p1" class="text1">{{ form.inputs.text1 }}</span>
+      </div>
+      <div id="div2" class="drag-and-drop" v-bind:style="form.style2">
+        <span id="text_p2" class="text1">{{ form.inputs.text2 }}</span>
+      </div>
+      <div id="div3" class="drag-and-drop" v-bind:style="form.style3">
+        <span id="text_p3" class="text1">{{ form.inputs.text3 }}</span>
+      </div>
+    </div>
+    <v-ons-list>
+    <div id="container">
+      <div class="center6">
+      <v-ons-segment v-show="!flgs.all" :index.sync="sub.sub_activeIndex2" tappable class="seg">
+        <button><span class="bt">{{ form.label_texts.text1 }}</span></button>
+        <button v-show="!flgs.sub"><span class="bt">{{ form.label_texts.text2 }}</span></button>
+        <button v-show="!flgs.other"><span class="bt">{{ form.label_texts.text3 }}</span></button>
+      </v-ons-segment>
+    </div>
+      <!-- ■ option header　-->
+    <div class="text-header">
+      <div class="left_slider">pt</div>
+      <div class="center_slider">Vertical/horizontal</div>
+      <div class="right_slider">font</div>
+    </div>
+    <!-- ■ text size（main） -->
+    <v-ons-list-item v-show="sub.sub_activeIndex2==0">
+      <v-ons-row class="flex">
+        <v-ons-col width="20px" class="text-height">
+          <strong>small</strong>
+        </v-ons-col>
+          <v-ons-range v-model="form.volume" min="10" max="150" v-on:change="size" class="text-height"></v-ons-range>
+        <v-ons-col width="20px" class="text-height">
+          <strong>big</strong>
+        </v-ons-col>
+      </v-ons-row>
+      <!-- ■ Vertical/horizontal（main） -->
+      <v-ons-switch input-id="switch1" id="sw" v-model="form.switchOn" v-on:change="vertical"></v-ons-switch>
+      <v-ons-select class="select"　v-model="form.selectedItem" v-on:change="font">
+        <option v-for="item in form.items" :value="item.value">
+          {{ item.name }}
+        </option>
+      </v-ons-select>
+    </v-ons-list-item>
+    <!-- ■ text size（sub） -->
+    <v-ons-list-item v-show="sub.sub_activeIndex2==1">
+      <v-ons-row class="flex">
+        <v-ons-col width="20px" class="text-height">
+          <strong>small</strong>
+        </v-ons-col>
+          <v-ons-range v-model="form.volume2" min="10" max="100" v-on:change="size2" class="text-height"></v-ons-range>
+        <v-ons-col width="20px" class="text-height">
+          <strong>big</strong>
+        </v-ons-col>
+      </v-ons-row>
+      <!-- ■ Vertical/horizontal（sub） -->
+      <v-ons-switch input-id="switch2" id="sw" v-model="form.switchOn2" v-on:change="vertical2"></v-ons-switch>
+      <v-ons-select class="select"　v-model="form.selectedItem2" v-on:change="font2">
+        <option v-for="item in form.items" :value="item.value">
+          {{ item.name }}
+        </option>
+      </v-ons-select>
+    </v-ons-list-item>
+    <!-- ■ text size（other） -->
+    <v-ons-list-item v-show="sub.sub_activeIndex2==2">
+      <v-ons-row class="flex">
+        <v-ons-col width="20px" class="text-height">
+          <strong>small</strong>
+        </v-ons-col>
+          <v-ons-range v-model="form.volume3" min="10" max="100" v-on:change="size3" class="text-height"></v-ons-range>
+        <v-ons-col width="20px" class="text-height">
+          <strong>big</strong>
+        </v-ons-col>
+      </v-ons-row>
+      <!-- ■ Vertical/horizontal（other） -->
+      <v-ons-switch input-id="switch3" id="sw" v-model="form.switchOn3" v-on:change="vertical3"></v-ons-switch>
+      <v-ons-select class="select"　v-model="form.selectedItem3" v-on:change="font3">
+        <option v-for="item in form.items" :value="item.value">
+          {{ item.name }}
+        </option>
+      </v-ons-select>
+    </v-ons-list-item>
+    <!-- ■ text color（main） -->
+    <div class="text-header">&emsp;select text color</div>
+    <div class="radio-button btn-group btn-group-toggle" v-show="sub.sub_activeIndex2==0">
+      <v-ons-button value="black"　class="btn btn_color_black" name="options" id="option1" v-on:click.prevent="change_color(1, 1)" v-on:click="tap">black</v-ons-button>
+      <v-ons-button value="white"　class="btn btn_color_white" name="options" id="option2" v-on:click.prevent="change_color(1, 2)" v-on:click="tap">white</v-ons-button>
+      <v-ons-button value="red"　class="btn btn_color_red" name="options" id="option3" v-on:click.prevent="change_color(1, 3)" v-on:click="tap">red</v-ons-button>
+      <v-ons-button value="blue"　class="btn btn_color_blue" name="options" id="option4" v-on:click.prevent="change_color(1, 4)" v-on:click="tap">blue</v-ons-button>
+      <v-ons-button value="green"　class="btn btn_color_green" name="options" id="option5" v-on:click.prevent="change_color(1, 5)" v-on:click="tap">green</v-ons-button>
+      <v-ons-button value="pink"　class="btn3 btn_color_pink" name="options" id="option6" v-on:click.prevent="change_color(1, 6)" v-on:click="tap">pink</v-ons-button>
+      <v-ons-button value="yellow"　class="btn btn_color_yellow" name="options" id="option7" v-on:click.prevent="change_color(1, 7)" v-on:click="tap">yellow</v-ons-button>
+      <v-ons-button value="orange"　class="btn btn_color_orange"　name="options" id="option8" v-on:click.prevent="change_color(1, 8)" v-on:click="tap">orange</v-ons-button>
+      <v-ons-button value="purple"　class="btn btn_color_violet"　name="options" id="option9" v-on:click.prevent="change_color(1, 9)" v-on:click="tap">purple</v-ons-button>
+      <v-ons-button value="sky"　class="btn btn_color_sky"　name="options" id="option10" v-on:click.prevent="change_color(1, 10)" v-on:click="tap">sky</v-ons-button>
+      <v-ons-button value="yellow green"　class="btn btn_color_yg"　name="options" id="option11" v-on:click.prevent="change_color(1, 11)" v-on:click="tap">yellow green</v-ons-button>
+      <v-ons-button value="light red"　class="btn btn_color_lp"　name="options" id="option12" v-on:click.prevent="change_color(1, 12)" v-on:click="tap">light red</v-ons-button>
+    </div>
+    <!-- ■ text color（sub） -->
+    <div class="radio-button btn-group btn-group-toggle" v-show="sub.sub_activeIndex2==1">
+      <v-ons-button value="black"　class="btn btn_color_black" name="options" id="option1" v-on:click.prevent="change_color(2, 1)" v-on:click="tap">black</v-ons-button>
+      <v-ons-button value="white"　class="btn btn_color_white" name="options" id="option2" v-on:click.prevent="change_color(2, 2)" v-on:click="tap">white</v-ons-button>
+      <v-ons-button value="red"　class="btn btn_color_red" name="options" id="option3" v-on:click.prevent="change_color(2, 3)" v-on:click="tap">red</v-ons-button>
+      <v-ons-button value="blue"　class="btn btn_color_blue" name="options" id="option4" v-on:click.prevent="change_color(2, 4)" v-on:click="tap">blue</v-ons-button>
+      <v-ons-button value="green"　class="btn btn_color_green" name="options" id="option5" v-on:click.prevent="change_color(2, 5)" v-on:click="tap">green</v-ons-button>
+      <v-ons-button value="pink"　class="btn3 btn_color_pink" name="options" id="option6" v-on:click.prevent="change_color(2, 6)" v-on:click="tap">pink</v-ons-button>
+      <v-ons-button value="yellow"　class="btn btn_color_yellow" name="options" id="option7" v-on:click.prevent="change_color(2, 7)" v-on:click="tap">yellow</v-ons-button>
+      <v-ons-button value="orange"　class="btn btn_color_orange"　name="options" id="option8" v-on:click.prevent="change_color(2, 8)" v-on:click="tap">orange</v-ons-button>
+      <v-ons-button value="purple"　class="btn btn_color_violet"　name="options" id="option9" v-on:click.prevent="change_color(2, 9)" v-on:click="tap">purple</v-ons-button>
+      <v-ons-button value="sky"　class="btn btn_color_sky"　name="options" id="option10" v-on:click.prevent="change_color(2, 10)" v-on:click="tap">sky</v-ons-button>
+      <v-ons-button value="yellow green"　class="btn btn_color_yg"　name="options" id="option11" v-on:click.prevent="change_color(2, 11)" v-on:click="tap">yellow green</v-ons-button>
+      <v-ons-button value="light red"　class="btn btn_color_lp"　name="options" id="option12" v-on:click.prevent="change_color(2, 12)" v-on:click="tap">light red</v-ons-button>
+    </div>
+    <!-- ■ text color（other） -->
+    <div class="radio-button btn-group btn-group-toggle" v-show="sub.sub_activeIndex2==2">
+      <v-ons-button value="black"　class="btn btn_color_black" name="options" id="option1" v-on:click.prevent="change_color(3, 1)" v-on:click="tap">black</v-ons-button>
+      <v-ons-button value="white"　class="btn btn_color_white" name="options" id="option2" v-on:click.prevent="change_color(3, 2)" v-on:click="tap">white</v-ons-button>
+      <v-ons-button value="red"　class="btn btn_color_red" name="options" id="option3" v-on:click.prevent="change_color(3, 3)" v-on:click="tap">red</v-ons-button>
+      <v-ons-button value="blue"　class="btn btn_color_blue" name="options" id="option4" v-on:click.prevent="change_color(3, 4)" v-on:click="tap">blue</v-ons-button>
+      <v-ons-button value="green"　class="btn btn_color_green" name="options" id="option5" v-on:click.prevent="change_color(3, 5)" v-on:click="tap">green</v-ons-button>
+      <v-ons-button value="pink"　class="btn3 btn_color_pink" name="options" id="option6" v-on:click.prevent="change_color(3, 6)" v-on:click="tap">pink</v-ons-button>
+      <v-ons-button value="yellow"　class="btn btn_color_yellow" name="options" id="option7" v-on:click.prevent="change_color(3, 7)" v-on:click="tap">yellow</v-ons-button>
+      <v-ons-button value="orange"　class="btn btn_color_orange"　name="options" id="option8" v-on:click.prevent="change_color(3, 8)" v-on:click="tap">orange</v-ons-button>
+      <v-ons-button value="purple"　class="btn btn_color_violet"　name="options" id="option9" v-on:click.prevent="change_color(3, 9)" v-on:click="tap">purple</v-ons-button>
+      <v-ons-button value="sky"　class="btn btn_color_sky"　name="options" id="option10" v-on:click.prevent="change_color(3, 10)" v-on:click="tap">sky</v-ons-button>
+      <v-ons-button value="yellow green"　class="btn btn_color_yg"　name="options" id="option11" v-on:click.prevent="change_color(3, 11)" v-on:click="tap">yellow green</v-ons-button>
+      <v-ons-button value="light red"　class="btn btn_color_lp"　name="options" id="option12" v-on:click.prevent="change_color(3, 12)" v-on:click="tap">light red</v-ons-button>
+    </div>
+      <div id="target" style="width: 100vw; display: none;">
+      </div>
+    <!-- ■ order -->
+    <v-ons-button class="center3 btn_color_blue half" v-on:click.prevent="push3(),tap">reselect</v-ons-button><v-ons-button class="color_red center3 half" v-on:click.prevent="push2(),tap"><i class="fas fa-shopping-cart"></i>&nbsp;continue shopping</v-ons-button><v-ons-button class="center3 half" v-on:click.prevent="push(),tap"><i class="fas fa-hand-point-up"></i>&nbsp;order</v-ons-button>
+    </v-ons-list>
+  </div>
+	</v-ons-page>
+</template>
+
+<!-- ★ user registration -->
+<template id="regist">
+  <v-ons-page>
+    <v-ons-list>
+    	<form id="regist_form" @submit.prevent="">
+        <div class="l_blue3" v-show="form_no == 0">&emsp;organizaiton</div>
+        <v-ons-list-item v-show="form_no == 0">
+          <div class="center">
+            <v-ons-input placeholder="organizaiton" float v-model="newEvent.meigi"></v-ons-input>
+          </div>
+        </v-ons-list-item>
+        <div class="l_blue3" v-show="form_no == 1">&emsp;full name(required)</div>
+        <v-ons-list-item v-show="form_no == 1">
+          <div class="center">
+            <v-ons-input placeholder="full name" float required v-model="newEvent.uname"></v-ons-input>
+          </div>
+        </v-ons-list-item>
+        <div class="l_blue3" v-show="form_no == 2">&emsp;ruby(optional)</div>
+        <v-ons-list-item  v-show="form_no == 2">
+          <div class="center">
+            <v-ons-input pattern="[\u3041-\u3096]*" placeholder="ruby(optional)" float v-model="newEvent.ruby"></v-ons-input>
+          </div>
+        </v-ons-list-item>
+        <div class="l_blue3" v-show="form_no == 3">&emsp;zipcode(7strings)</div>
+        <v-ons-list-item  v-show="form_no == 3">
+          <div class="center">
+            <v-ons-input id="zip" type="text" name="zip11" size="20" maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','addr11','addr11');" placeholder="zipcode(optional)" float v-model="newEvent.zip"></v-ons-input>
+          </div>
+        </v-ons-list-item>
+        <div class="l_blue3" v-show="form_no == 4">&emsp;address</div>
+        <v-ons-list-item v-show="form_no == 4">
+          <div class="center">
+            <v-ons-input placeholder="address(optional)" type="text" name="addr11" size="60" max="60" float v-model="newEvent.address"></v-ons-input>
+          </div>
+        </v-ons-list-item>
+        <div class="l_blue3" v-show="form_no == 5">&emsp;tel（no-hyphen）</div>
+        <v-ons-list-item v-show="form_no == 5">
+          <div class="center">
+            <v-ons-input pattern="^[0-9]+$" placeholder="tel（no-hyphen）" float required minlength=10 v-model="newEvent.tel"></v-ons-input>
+          </div>
+        </v-ons-list-item>
+        <div v-show="form_no == 6" class="l_blue3">&emsp;mail</div>
+        <v-ons-list-item v-show="form_no == 6">
+          <div class="center">
+            <v-ons-input type="text" placeholder="mail（optional）" float v-model="newEvent.mail"></v-ons-input>
+          </div>
+        </v-ons-list-item>
+        <div class="l_blue3" v-show="form_no == 7">&emsp;shipping date</div>
+        <v-ons-list-item v-show="form_no == 7">
+          <div class="center">
+            <input id="datepicker" readonly="readonly" style="font-size: 16px;" float required />
+          </div>
+        </v-ons-list-item>
+        <div class="l_blue3" v-show="form_no == 8">&emsp;receiving shop</div>
+        <v-ons-list-item v-show="form_no == 8">
+        <div class="center">*****</div>
+        </v-ons-list-item>
+        <div class="l_blue3" v-show="form_no == 9">&emsp;age confirmation</div>
+        <v-ons-list-item v-show="form_no == 9">
+          <input type="checkbox" name="riyu" v-model="newEvent.check" required />I'm over 20<br />
+        </v-ons-list-item>
+        <v-ons-button id="form_go" class="center3 btn_color_blue half mg" v-show="form_no > 0" v-on:click.prevent="push(-1)">back</v-ons-button><v-ons-button v-show="(form_no > 0 && form_no !== 9)"id="form_go" class="color_red center3 half mg" v-on:click.prevent="push(1)">forward</v-ons-button><v-ons-button v-show="form_no == 0" id="form_go" class="color_red center3 half mg2" v-on:click.prevent="push(1)">forward</v-ons-button>
+        <v-ons-list-item v-show="form_no > 8">
+          <v-ons-button modifier="large" v-on:click.prevent="update()">register</v-ons-button>
+        </v-ons-list-item>
+        <v-ons-list-item>
+        {{ newEvent.error }}
+        </v-ons-list-item>
+      </form>
+    </v-ons-list>
+  </v-ons-page>
+</template>
+
+<!-- ★ confirmation -->
+<template id="result">
+  <v-ons-page>
+    <v-ons-list>
+      <div class="l_blue3">&emsp;fullname</div>
+      <v-ons-list-item>{{ newEvent.uname }}</v-ons-list-item>
+      <div class="l_blue3">&emsp;ruby</div>
+      <v-ons-list-item>{{ newEvent.ruby }}</v-ons-list-item>
+      <div class="l_blue3">&emsp;organizaiton</div>
+      <v-ons-list-item>{{ newEvent.meigi }}</v-ons-list-item>
+      <div class="l_blue3">&emsp;address</div>
+      <v-ons-list-item>{{ newEvent.address }}</v-ons-list-item>
+      <div class="l_blue3">&emsp;tel</div>
+      <v-ons-list-item>{{ newEvent.tel }}</v-ons-list-item>
+      <div class="l_blue3">&emsp;mail</div>
+      <v-ons-list-item>{{ newEvent.mail }}</v-ons-list-item>
+      <div class="l_blue3">&emsp;shipping date</div>
+      <v-ons-list-item>{{ newEvent.date }}</v-ons-list-item>
+      <div class="l_blue3">&emsp;recieving shop</div>
+      <v-ons-list-item>{{ newEvent.shop }}</v-ons-list-item>
+      <v-ons-list-item>
+      <v-ons-button class="center3 btn_color_blue half mg" v-on:click.prevent="push(0)">back</v-ons-button><v-ons-button class="color_red center3 half mg" v-on:click.prevent="push(1)">go confirmation</v-ons-button>
+      </v-ons-list-item>
+    </v-ons-list>
+  </v-ons-page>
+</template>
+
+<!-- ★ payment -->
+<template id="payment">
+  <v-ons-page>
+    <v-ons-list>
+      <div class="l_blue3">&emsp;select payment method</div>
+      <v-ons-list-item id="payment_part" tappable v-on:click.prevent="push()">
+      <form method="POST" id="pay_button" action="https://*****">
+        <div class="left">
+          <img class="list-item__thumbnail" src="images/card.svg">
+        </div>
+        <div>
+          <span class="list-item__title">credit card</span><span class="list-item__subtitle">goto card entry page</span>
+        </div>
+        <input type="hidden" name="ShopID" :value="payment.ShopID" />
+        <input type="hidden" name="OrderID" :value="payment.OrderID" />
+        <input type="hidden" name="Amount" :value="payment.Amount" />
+        <input type="hidden" name="DateTime" :value="payment.DateTime" />
+        <input type="hidden" name="ShopPassString" :value="payment.ShopPassString" />
+        <input type="hidden" name="RetURL" :value="payment.RetURL" />
+        <input type="hidden" name="UseCredit" :value="payment.UseCredit" />
+        <input type="hidden" name="JobCd" :value="payment.JobCd" />
+        <input type="hidden" name="CancelURL" :value="payment.CancelURL " />
+      </form>
+    </v-ons-list-item>
+  </v-ons-page>
+</template>
+
+<!-- ★ Specified Commercial Transaction Law -->
+<template id="tokusho">
+  <v-ons-page>
+    <v-ons-list>
+      <div class="l_blue3">&emsp;seller</div>
+      <v-ons-list-item>*****</v-ons-list-item>
+      <div class="l_blue3">&emsp;manager</div>
+      <v-ons-list-item>*****</v-ons-list-item>
+      <div class="l_blue3">&emsp;address</div>
+      <v-ons-list-item>*****</v-ons-list-item>
+      <div class="l_blue3">&emsp;tel</div>
+      <v-ons-list-item>*****</v-ons-list-item>
+      <div class="l_blue3">&emsp;mail</div>
+      <v-ons-list-item>*****</v-ons-list-item>
+      <div class="l_blue3">&emsp;other fee without product</div>
+      <v-ons-list-item>tax, shipping fee</v-ons-list-item>
+      <div class="l_blue3">&emsp;payment method</div>
+      <v-ons-list-item>credit card</v-ons-list-item>
+      <div class="l_blue3">&emsp;return</div>
+      <v-ons-list-item>We do not accept returns for your convenience. If initial failure, we accept returns and exchanges if it is within 7 days.</v-ons-list-item>
+      <div class="l_blue3">&emsp;Liquor license </div>
+      <div class="l_blue">&emsp;Liquor license No</div>
+      <v-ons-list-item>*****</v-ons-list-item>
+      <div class="l_blue">&emsp;name and address</div>
+      <v-ons-list-item>*****</v-ons-list-item>
+      <div class="l_blue">&emsp;Manager's name</div>
+      <v-ons-list-item>*****</v-ons-list-item>
+      <div class="l_blue">&emsp;Training Attendance Date</div>
+      <v-ons-list-item>*****</v-ons-list-item>
+      <div class="l_blue">&emsp;Next Training Limit</div>
+      <v-ons-list-item>*****</v-ons-list-item>
+      <div class="l_blue">&emsp;Organizer</div>
+      <v-ons-list-item>*****</v-ons-list-item>
+      <v-ons-button modifier="large" v-on:click.prevent="tokusho(false)">back</v-ons-button>
+      </v-ons-list-item>
+    </v-ons-list>
+  </v-ons-page>
+</template>
+
+<!-- ★ cart confirmation -->
+<template id="cart">
+	<v-ons-page>
+	  <table class="cart_tbl">
+	    <tr>
+	      <th class="n">product name</th>
+	      <th class="s">label No.</th>
+        <th class="s">string</th>
+	      <th class="s">amount</th>
+	      <th class="s">price(yen)</th>
+        <th>delete</th>
+	    </tr>
+	    <tr v-for="(entry, index) in tbl">
+	      <td>{{ entry.name }}</td>
+	      <td>{{ entry.labelid }}</td>
+        <td><span style="width: 15vw; overflow: hidden; text-overflow: ellipsis;">{{ entry.content }}</span></td>
+	      <td>{{ entry.itemcount }}</td>
+	      <td class="num_right">{{ (entry.price * entry.itemcount).toLocaleString() }}</td>
+        <td style="text-align: center;"><v-ons-button v-on:click.prevent="delete_item(index)"><i class="fas fa-times"></i></v-ons-button></td>
+	    </tr>
+      <tr>
+        <td class="gross" colspan="5">total price（tax included, yen）</td>
+        <td class="num_right">{{ gross.toLocaleString() }}</td>
+      </tr>
+       <tr>
+        <td colspan="6" class="d" v-show="bt_flg"　v-if="bt_flg2"><v-ons-button v-on:click.prevent="go_order()" modifier="large" style="margin: 6px 0">goto order</v-ons-button></td>
+      </tr>
+      <tr>
+        <td colspan="6" class="d"><v-ons-button v-on:click.prevent="push()" modifier="large" style="background-color: #FFA500; margin: 6px 0">continue shopping</v-ons-button></td>
+      </tr>
+      <tr>
+        <td colspan="6" class="d" v-show="!bt_flg"><v-ons-button v-on:click.prevent="go_payment()" modifier="large" style="background-color: #FC2347; margin: 6px 0">order</v-ons-button></td>
+      </tr>
+      <tr>
+        <td width="100vw" colspan="6" id="imgs"></td>
+      </tr>
+	  </table>
+	</v-ons-page>
+</template>
+
+<div id="app"></div>
+
+<!-- ★ script -->
+<script type="text/javascript" src="./libs/index.js"></script>
+<!-- drag -->
+<script type="text/javascript" src="./libs/drag_index.js"></script>
+<script type="text/javascript" src="./libs/drag_out.js"></script>
+</body>
+</html>

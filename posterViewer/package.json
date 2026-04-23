@@ -1,0 +1,20 @@
+{
+  "name": "poster-viewer",
+  "productName": "poster-viewer",
+  "version": "0.1.0",
+  "description": "getting box absolute path from urls.",
+  "main": "app.js",
+  "keywords": [],
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "mysql2": "^2.1.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {},
+  "license": "GPL-3.0"
+}
