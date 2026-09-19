@@ -1,0 +1,115 @@
+*
+{
+    margin: 0;
+    padding: 0;
+}
+
+#navbar-list
+{
+    color: #fff;
+    margin-left: 0px;
+    padding-left: 0px;
+    width: 1000px;
+    height: 100px;
+    list-style-type: none;
+    display: block;
+    background-color: #3d3d3d;
+    text-align: center;
+}
+
+li
+{
+    display: inline-block;
+    margin-top: 35px;
+    color: #fff;
+    font-size: 24px;
+    margin-left: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: Sans-Serif;
+}
+
+li:hover
+{
+    background-color: #808080;
+}
+
+.content {
+    font-size: 0.8em;
+    display: none;
+    margin: 30px 30px 0px 30px;
+}
+
+li a {　
+    color: inherit;
+    text-decoration: none;
+}
+
+li a:hover {
+    text-decoration: underline;
+}
+
+li a:link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.tbl {
+    width: 100%;
+    border: solid 1px #CCC;
+    border-collapse: collapse;
+}
+
+.tbl tr td {
+    border: solid 1px #CCC;
+    padding-left: 5px;
+    height: 50px;
+}
+
+.left {
+    text-align: left;
+}
+
+#sub_button {
+    width: 200px;
+    font-size: 20px;
+}
+
+.flex_btn {
+    margin-top: 50px;
+    margin-left: 50px;
+    float: left;
+}
+
+#big_btn {
+    width: 30vw;
+    height: 20vw;
+    font-size: 3em;
+}
+
+.edit_tbl {
+    font-size: 0.8rem;
+    margin-top: 20px;
+    margin-left: 20px;
+    border: solid 1px #CCC;
+    border-collapse: collapse;
+}
+
+.edit_tbl tr td {
+    border: solid 1px #CCC;
+    height: 30px;
+    padding-left: 10px;
+}
+
+.tbl_header, .tbl_left {
+    background-color: #fdfed6;
+}
+
+#sbm {
+    width: 15vw;
+}
+
+h2 {
+    margin-top: 30px;
+    margin-left: 20px;
+}

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/stylesheets/man_base.css" title="Main styles">
+<title>LABELEE view</title>
+</head>
+<body>
+<% var url = "*****" %>
+<h1>view</h1>
+<div class="left">
+    <form method="post" action="/edit">
+        <input id="sub_button" type="submit" value="goto edit" />
+    </form>
+</div>
+<br />
+<div id="navbar">
+<ul id="navbar-list">
+    <li><a href="javascript:void(0)" onclick="ChangeTxt(1); return false;">order</a></li>
+    <li><a href="javascript:void(0)" onclick="ChangeTxt(2); return false;">user</a></li>
+    <li><a href="javascript:void(0)" onclick="ChangeTxt(3); return false;">product</a></li>
+    <li><a href="javascript:void(0)" onclick="ChangeTxt(4); return false;">agent</a></li>
+    <li><a href="javascript:void(0)" onclick="ChangeTxt(5); return false;">label</a></li>
+    <li><a href="javascript:void(0)" onclick="ChangeTxt(6); return false;">organizaiton</a></li>
+</ul>
+</div>
+<div class="content" id="1">
+<h2>order</h2>
+<table class="tbl">
+    <tr>
+        <td width="3%">ID</td>
+        <td width="9%">order ID</td>
+        <td width="9%">order date</td>
+        <td width="18%">product</td>
+        <td width="5%">unit price<br />(yen,tax included)</td>
+        <td width="3%">amount</td>
+        <td width="5%">subtotal<br />(yen,tax included)</td>
+        <td width="6%">total price<br />(yen,tax included)</td>
+        <td width="10%">deadline</td>
+        <td width="3%">label</td>
+        <td width="7%">management no</td>
+        <td width="10%">customer</td>
+        <td width="3%">AG</td>
+        <td width="3%">payment</td>
+        <td width="3%">progress</td>
+        <td width="6%">staff</td>
+    </tr>
+  <% for(var i=0;i<data.order.length;i++){ %>
+    <tr>
+        <td><%= data.order[i].id %></td>
+        <td><%= data.order[i].order_id %></td>
+        <td><%= data.times[i] %></td>
+        <td><%= data.order[i].itemname %></td>
+        <td><%= data.order[i].price.toLocaleString() %></td>
+        <td><%= data.order[i].itemcount %></td>
+        <td><%= (data.order[i].price * data.order[i].itemcount).toLocaleString() %></td>
+        <td><%= data.order[i].total.toLocaleString() %></td>
+        <td><%= data.order[i].date %></td>
+        <td><a href="<%= data.order[i].url %>" onclick="window.open('<%= data.order[i].url %>'); return false;"><%= data.order[i].labelid %></a></td>
+        <td><%= data.order[i].man_id %></td>
+        <td><%= data.order[i].username %></td>
+        <td><%= data.order[i].agentid %></td>
+        <td><% if(data.order[i].paid == 1){ %>done<% } else { %>not done<% } %></td>
+        <td><%= data.order[i].progress %></td>
+        <td><%= data.order[i].ownerid %></td>
+    </tr>
+  <% } %>
+</table>
+</div>
+<div class="content" id="2">
+<h2>user</h2>
+<table class="tbl">
+    <tr>
+        <td width="5%">user ID</td>
+        <td width="12%">name</td>
+        <td width="12%">ruby</td>
+        <td width="12%">organization</td>
+        <td width="7%">zip</td>
+        <td width="16%">address</td>
+        <td width="10%">tel</td>
+        <td width="14%">mail</td>
+        <td width="5%">staff ID</td>
+        <td width="5%">employee ID</td>
+    </tr>
+    <% for(var i=0;i<data.user.length;i++){ %>
+    <tr>
+        <td><%= data.user[i].id %></td>
+        <td><%= data.user[i].name %></td>
+        <td><%= data.user[i].ruby %></td>
+        <td><%= data.user[i].group %></td>
+        <td><%= data.user[i].zip %></td>
+        <td><%= data.user[i].address %></td>
+        <td><%= data.user[i].tel %></td>
+        <td><%= data.user[i].mail %></td>
+        <td><%= data.user[i].agentid %></td>
+        <td><%= data.user[i].ownerid %></td>
+    </tr>
+    <% } %>
+</table>
+</div>
+<div class="content" id="3">
+<h2>product</h2>
+<table class="tbl">
+    <tr>
+        <td width="8%">product ID</td>
+        <td width="8%">sort</td>
+        <td width="24%">product name</td>
+        <td width="13%">unit price(yen,tax included)</td>
+        <td width="17%">madein</td>
+        <td width="10%">volume</td>
+        <td width="10%">degree</td>
+        <td width="10%">feature</td>
+    </tr>
+    <% for(var i=0;i<data.item.length;i++){ %>
+    <tr>
+        <td><%= data.item[i].id %></td>
+        <td><%= data.item[i].typeid %></td>
+        <td><%= data.item[i].name %></td>
+        <td><%= data.item[i].price.toLocaleString() %></td>
+        <td><%= data.item[i].madein %></td>
+        <td><%= data.item[i].volume %></td>
+        <td><%= data.item[i].alchohol %></td>
+        <td><%= data.item[i].specific %></td>
+    </tr>
+    <% } %>
+</table>
+</div>
+<div class="content" id="4">
+<h2>agent</h2>
+<table class="tbl">
+    <tr>
+        <td width="5%">AG_ID</td>
+        <td width="5%">sort</td>
+        <td width="20%">company name</td>
+        <td width="5%">zip</td>
+        <td width="20%">address</td>
+        <td width="14%">tel</td>
+        <td width="17%">mail</td>
+        <td width="7%">AG</td>
+        <td width="7%">staff</td>
+    </tr>
+    <% for(var i=0;i<data.agent.length;i++){ %>
+    <tr>
+        <td><%= data.agent[i].id %></td>
+        <td><%= data.agent[i].ganre %></td>
+        <td><%= data.agent[i].name %></td>
+        <td><%= data.agent[i].zipe %></td>
+        <td><%= data.agent[i].addr %></td>
+        <td><%= data.agent[i].tel %></td>
+        <td><%= data.agent[i].mail %></td>
+        <td><%= data.agent[i].incharge %></td>
+        <td><%= data.agent[i].ownername %></td>
+    </tr>
+    <% } %>
+</table>
+</div>
+<div class="content" id="5">
+<h2>label</h2>
+<table class="tbl">
+    <tr>
+        <td width="5%">label ID</td>
+        <td width="5%">management no</td>
+        <td width="5%">sort</td>
+        <td width="25%">image</td>
+        <td width="10%">label name</td>
+        <td width="50%">comment</td>
+    </tr>
+    <% for(var i=0;i<data.label.length;i++){ %>
+    <% var img_no = ( '000' + String(data.label.length - i) ).slice( -4 ); %>
+    <tr>
+        <td><%= data.label[i].id %></td>
+        <td><%= data.label[i].man_id %></td>
+        <td><%= data.label[i].ganre %></td>
+        <td><img src="images/label/shochu/s_<%= img_no %>.png"></td>
+        <td><%= data.label[i].name %></td>
+        <td><%= data.label[i].comment %></td>
+    </tr>
+    <% } %>
+</table>
+</div>
+<div class="content" id="6">
+<h2>staff</h2>
+<table class="tbl">
+    <tr>
+        <td width="15%">staff ID</td>
+        <td width="15%">employee ID</td>
+        <td width="40%">name</td>
+        <td width="20%">belong</td>
+        <td width="10%">permission</td>
+    </tr>
+     <% for(var i=0;i<data.owner.length;i++){ %>
+    <tr>
+        <td><%= data.owner[i].id %></td>
+        <td><%= data.owner[i].employee_id %></td>
+        <td><%= data.owner[i].name %></td>
+        <td><%= data.owner[i].belonging %></td>
+        <td><%= data.owner[i].permission %></td>
+    </tr>
+    <% } %>
+</table>
+</div>
+<script type="text/javascript">
+function ChangeTxt(no) {
+    var elem = document.getElementsByClassName('content');
+    elem = Array.from(elem);
+    elem.forEach(function(n){
+        n.style.display="none";
+        document.getElementById(no).style.display="block";
+    })
+}
+function splice(arr, index, howMany /*, elements*/){
+  if(toString.call(arr) !== '[object Array]') return null;
+  if(arr.length === 0) return null;
+  var copy = arr.slice(),
+    arg = Array.prototype.slice.call(arguments);
+  arg.shift();
+  Array.prototype.splice.apply(copy, arg);
+  return copy;
+}
+</script>
+<script>
+  var count = 0;
+  var page_reload = function(){
+    location.reload();
+    count++;
+  }
+  var id = setInterval(function(){
+    page_reload();
+    }, 1000 * 60 * 1);
+</script>
+</body>
+</html>
